@@ -2,38 +2,33 @@
   <v-app>
     <v-toolbar app>
       <v-toolbar-title class="headline text-uppercase">
-        <span>Vuetify</span>
-        <span class="font-weight-light">MATERIAL DESIGN</span>
+        <span>1 on 1</span>
       </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn
-        flat
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>open_in_new</v-icon>
-      </v-btn>
     </v-toolbar>
 
     <v-content>
-      <HelloWorld />
+      <v-container>
+        <v-layout align-center justify-center>
+          <v-flex xs12 md4>
+            <MailHeader/>
+            <Register/>
+          </v-flex>
+        </v-layout>
+      </v-container>
     </v-content>
   </v-app>
 </template>
 
-<script>
-import HelloWorld from "./components/HelloWorld";
+<script lang="ts">
+import Register from "@/components/Register.vue";
+import MailHeader from "@/components/MailHeader.vue";
+import { Vue, Component } from "vue-property-decorator";
 
-export default {
-  name: "App",
+@Component({
   components: {
-    HelloWorld
-  },
-  data() {
-    return {
-      //
-    };
+    Register,
+    MailHeader
   }
-};
+})
+export default class App extends Vue {}
 </script>
