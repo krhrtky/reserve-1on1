@@ -34,7 +34,7 @@
               <v-btn color="warning" @click="clear">
                 Clear
               </v-btn>
-              <v-btn color="primary">
+              <v-btn color="primary" @click="save">
                 Save
               </v-btn>
             </v-card-actions>
@@ -47,36 +47,26 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-
-type MailContent = {
-  to: string;
-  yourName: string;
-  prefix: string;
-  postfix: string;
-};
-
-const defaultContent: MailContent = {
-  to: "",
-  yourName: "",
-  prefix: `以下の日程で1on1を実施します。
-お手数ですが会議室の確保をお願いします。`,
-  postfix: "以上、よろしくお願いします。"
-};
+import { MailContent } from "@/model/types";
 
 @Component
-export default class MailHeader extends Vue {
+export default class MailTemplate extends Vue {
   panel: boolean = false;
-  content: MailContent = Object.assign({}, defaultContent);
+  get content() {
+    return Object.assign({}, this.$store.getters.mailContent);
+  }
 
   onClick() {
     this.panel = !this.panel;
   }
 
   clear() {
-    this.content = Object.assign({}, defaultContent);
+    this.content = Object.assign({}, this.$store.getters.mailContent);
   }
 
-  save() {}
+  save() {
+    this.$store.dispatch("registerContent", this.content);
+  }
 }
 </script>
 

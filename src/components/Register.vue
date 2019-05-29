@@ -3,9 +3,6 @@
     <v-toolbar color="primary">
       <v-toolbar-title>Description</v-toolbar-title>
       <v-spacer />
-      <v-btn @click="open">
-        Preview
-      </v-btn>
       <v-badge color="red">
         <template v-slot:badge>
           <span>{{ subjects.length }}</span>
@@ -18,8 +15,8 @@
     <v-card-text>
       <v-form>
         <v-text-field
-          v-model="subject.menteename"
-          label="mentee's name"
+          v-model="subject.menteeName"
+          label="Mentee's name"
           required
         ></v-text-field>
 
@@ -39,7 +36,7 @@
 
         <v-text-field
           v-model="subject.endTime"
-          label="Date"
+          label="end"
           required
           type="time"
         ></v-text-field>
@@ -58,20 +55,20 @@
         </v-card-actions>
       </v-form>
     </v-card-text>
-    <preview :open="previewIsOpen" :subjects="this.subjects"></preview>
   </v-card>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
+import dayjs from "dayjs";
 import Preview from "./Preview.vue";
-import { Subject } from "@/model/Subject";
+import { Subject } from "@/model/types";
 
 const defaultSubject: Subject = {
   menteeName: "",
-  date: "",
-  startTime: "",
-  endTime: "",
+  date: dayjs().format("YYYY-MM-DD"),
+  startTime: "18:00",
+  endTime: "18:30",
   useMeetingRoom: true
 };
 
@@ -83,21 +80,16 @@ const defaultSubject: Subject = {
 export default class Register extends Vue {
   subject: Subject = Object.assign({}, defaultSubject);
 
-  subjects: Array<Subject> = [];
-
-  previewIsOpen: boolean = false;
-
   clear() {
     this.subject = Object.assign({}, defaultSubject);
   }
 
-  add(subject: Subject) {
-    this.subjects.push(subject);
+  add() {
+    this.$store.commit("addSubject", this.subject);
     this.clear();
   }
-
-  open() {
-    this.previewIsOpen = true;
+  get subjects() {
+    return this.$store.getters.subjects;
   }
 }
 </script>
