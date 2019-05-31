@@ -39,7 +39,6 @@ export default class App extends Vue {
     return this.$store.getters.subjects;
   }
   get content() {
-    console.log('update', this.$store.getters.mailContent)
     return this.$store.getters.mailContent;
   }
 }
