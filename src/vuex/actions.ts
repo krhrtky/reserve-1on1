@@ -1,5 +1,6 @@
 import { ActionTree } from "vuex";
 import { MailContent, State } from "@/model/types";
+import InitialContent from "@/model/InitialContent";
 
 const actions: ActionTree<State, State> = {
   /**
@@ -17,6 +18,7 @@ const actions: ActionTree<State, State> = {
    */
   clearContent({ commit }) {
     localStorage.removeItem("rks-1on1");
+    commit("updateContent", InitialContent);
   }
 };
 

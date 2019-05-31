@@ -61,7 +61,7 @@ export default class MailTemplate extends Vue {
   }
 
   clear() {
-    this.content = Object.assign({}, this.$store.getters.mailContent);
+    this.$store.dispatch("clearContent");
   }
 
   save() {
