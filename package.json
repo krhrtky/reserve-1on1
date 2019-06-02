@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@types/jest": "^23.1.4",
+    "@types/vuelidate": "^0.7.5",
     "@vue/cli-plugin-babel": "^3.7.0",
     "@vue/cli-plugin-e2e-cypress": "^3.7.0",
     "@vue/cli-plugin-eslint": "^3.7.0",

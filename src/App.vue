@@ -22,10 +22,11 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-import Register from "@/components/Register.vue";
-import MailTemplate from "@/components/MailTemplate.vue";
-import Preview from "@/components/Preview.vue";
+import { Vue, Component } from 'vue-property-decorator'
+import Register from '@/components/Register.vue'
+import MailTemplate from '@/components/MailTemplate.vue'
+import Preview from '@/components/Preview.vue'
+import { MailContent, Subject } from '@/model/types'
 
 @Component({
   components: {
@@ -35,11 +36,11 @@ import Preview from "@/components/Preview.vue";
   }
 })
 export default class App extends Vue {
-  get subjects() {
-    return this.$store.getters.subjects;
+  get subjects(): Array<Subject> {
+    return this.$store.getters.subjects
   }
-  get content() {
-    return this.$store.getters.mailContent;
+  get content(): MailContent {
+    return this.$store.getters.mailContent
   }
 }
 </script>

@@ -7,45 +7,68 @@
         <template v-slot:badge>
           <span>{{ subjects.length }}</span>
         </template>
-        <v-icon>
-          mail
-        </v-icon>
+        <v-menu
+          bottom
+          offset-y
+          :close-on-content-click="false"
+          :disabled="!subjects.length"
+        >
+          <template v-slot:activator="{ on }">
+            <v-icon v-on="on">
+              mail
+            </v-icon>
+          </template>
+          <v-list>
+            <v-list-tile v-for="(subject, i) in subjects" :key="i" inactive>
+              <v-list-tile-title>
+                {{ i + 1 }}. {{ subject.menteeName }}
+                <v-icon small class="close-icon" @click="remove(subject)">
+                  close
+                </v-icon>
+              </v-list-tile-title>
+            </v-list-tile>
+          </v-list>
+        </v-menu>
       </v-badge>
     </v-toolbar>
     <v-card-text>
-      <v-form>
+      <v-form ref="form">
         <v-text-field
           v-model="subject.menteeName"
           label="Mentee's name"
+          :rules="nameRules"
           required
-        ></v-text-field>
+        />
 
         <v-text-field
           v-model="subject.date"
           label="Date"
-          required
           type="date"
-        ></v-text-field>
+          :rules="dateRules"
+          required
+        />
 
         <v-text-field
           v-model="subject.startTime"
           label="start"
-          required
           type="time"
-        ></v-text-field>
+          :rules="startTimeRules"
+          required
+        />
 
         <v-text-field
           v-model="subject.endTime"
           label="end"
-          required
+          :rules="endTimeRules"
           type="time"
-        ></v-text-field>
+          required
+        />
         <v-checkbox
           v-model="subject.useMeetingRoom"
           :label="`会議室予約: ${subject.useMeetingRoom ? '要' : '不要'}`"
-        ></v-checkbox>
+        />
         <v-card-actions>
-          <v-spacer></v-spacer>
+          <v-spacer />
           <v-btn color="warning" @click="clear">
             Clear
           </v-btn>
@@ -59,18 +82,18 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-import dayjs from "dayjs";
-import Preview from "./Preview.vue";
-import { Subject } from "@/model/types";
+import { Vue, Component } from 'vue-property-decorator'
+import dayjs from 'dayjs'
+import Preview from '@/components/Preview.vue'
+import { Subject } from '@/model/types'
 
 const defaultSubject: Subject = {
-  menteeName: "",
-  date: dayjs().format("YYYY-MM-DD"),
-  startTime: "18:00",
-  endTime: "18:30",
+  menteeName: '',
+  date: dayjs().format('YYYY-MM-DD'),
+  startTime: '18:00',
+  endTime: '18:30',
   useMeetingRoom: true
-};
+}
 
 @Component({
   components: {
@@ -78,20 +101,65 @@ const defaultSubject: Subject = {
   }
 })
 export default class Register extends Vue {
-  subject: Subject = Object.assign({}, defaultSubject);
 
-  clear() {
-    this.subject = Object.assign({}, defaultSubject);
+  private subject: Subject = Object.assign({}, defaultSubject)
+
+  private nameRules: Array<(v: string) => boolean | string> = [
+    v => !!v || 'Name is required.'
+  ]
+
+  private dateRules: Array<(v: string) => boolean | string> = [
+    v => !!v || 'Date is required.',
+    v => dayjs(v).isValid() || 'Date\'s format is invalid'
+  ]
+
+  private startTimeRules: Array<(v: string) => boolean | string> = [
+    v => !!v || 'StartTime is required.',
+    v =>
+      dayjs(`${this.subject.date} ${v}`).isValid() ||
+      'Date\'s format is invalid.',
+    v =>
+      dayjs(`${this.subject.date} ${v}`).isBefore(
+        dayjs(`${this.subject.date} ${this.subject.endTime}`)
+      ) || 'StartTime must be after EndTime.'
+  ]
+
+  private endTimeRules: Array<(v: string) => boolean | string> = [
+    v => !!v || 'EndTime is required',
+    v =>
+      dayjs(`${this.subject.date} ${v}`).isValid() ||
+      'Date\'s format is invalid',
+    v =>
+      dayjs(`${this.subject.date} ${v}`).isAfter(
+        dayjs(`${this.subject.date} ${this.subject.startTime}`)
+      ) || 'EndTime must be after StartTime.'
+  ]
+
+  private clear(): void {
+    this.subject = Object.assign({}, defaultSubject)
   }
 
-  add() {
-    this.$store.commit("addSubject", this.subject);
-    this.clear();
+  private add(): void {
+    const form: any = this.$refs.form as any
+    if (form.validate()) {
+      this.$store.commit('addSubject', this.subject)
+      this.clear()
+      form.resetValidation()
+    }
   }
-  get subjects() {
-    return this.$store.getters.subjects;
+
+  private remove(subject: Subject): void {
+    this.$store.commit('removeSubject', subject)
+  }
+
+  private get subjects(): Array<Subject> {
+    return this.$store.getters.subjects
   }
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.close-icon {
+  cursor: pointer;
+}
+</style>

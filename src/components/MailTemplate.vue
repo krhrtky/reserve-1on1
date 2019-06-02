@@ -7,30 +7,26 @@
       <v-expansion-panel-content v-model="panel">
         <v-card-text>
           <v-form>
-            <v-text-field
-              v-model="content.to"
-              label="To (Please enter in comma separated space)"
-              required
-            ></v-text-field>
+            <v-text-field v-model="content.to" label="To" required />
             <v-text-field
               v-model="content.yourName"
               label="Your Name"
               required
-            ></v-text-field>
+            />
             <v-textarea
               v-model="content.prefix"
               label="Prefix"
               required
               type="textarea"
-            ></v-textarea>
+            />
             <v-textarea
               v-model="content.postfix"
               label="Postfix"
               required
               type="textarea"
-            ></v-textarea>
+            />
             <v-card-actions>
-              <v-spacer></v-spacer>
+              <v-spacer />
               <v-btn color="warning" @click="clear">
                 Clear
               </v-btn>
@@ -46,26 +42,27 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-import { MailContent } from "@/model/types";
+import { Vue, Component } from 'vue-property-decorator'
+import { MailContent } from '@/model/types'
 
 @Component
 export default class MailTemplate extends Vue {
-  panel: boolean = false;
-  get content() {
-    return Object.assign({}, this.$store.getters.mailContent);
+  private panel: boolean = false
+
+  private get content(): MailContent {
+    return Object.assign({}, this.$store.getters.mailContent)
   }
 
-  onClick() {
-    this.panel = !this.panel;
+  private onClick(): void {
+    this.panel = !this.panel
   }
 
-  clear() {
-    this.$store.dispatch("clearContent");
+  private clear(): void {
+    this.$store.dispatch('clearContent')
   }
 
-  save() {
-    this.$store.dispatch("registerContent", this.content);
+  private save(): void {
+    this.$store.dispatch('registerContent', this.content)
   }
 }
 </script>

@@ -765,6 +765,13 @@
   resolved "https://registry.npm.taobao.org/@types/strip-json-comments/download/@types/strip-json-comments-0.0.30.tgz#9aa30c04db212a9a0649d6ae6fd50accc40748a1"
   integrity sha1-mqMMBNshKpoGSdaub9UKzMQHSKE=
 
+"@types/vuelidate@^0.7.5":
+  version "0.7.5"
+  resolved "https://registry.yarnpkg.com/@types/vuelidate/-/vuelidate-0.7.5.tgz#903708687403c8e33ae2f992769b3c09979841e5"
+  integrity sha512-Xz4znSLv5VAiTvxaCvF5mlXwzJiOWAV0BysCHk0cyXUK7LpMSnXQcYNSbPioa821O1Vcs4SBuM+VAuHbIhFdqw==
+  dependencies:
+    vue "^2.5.16"
+
 "@types/webpack-env@^1.13.9":
   version "1.13.9"
   resolved "https://registry.npm.taobao.org/@types/webpack-env/download/@types/webpack-env-1.13.9.tgz#a67287861c928ebf4159a908d1fb1a2a34d4097a"
@@ -10090,7 +10097,7 @@ vue-template-es2015-compiler@^1.6.0, vue-template-es2015-compiler@^1.9.0:
   resolved "https://registry.npm.taobao.org/vue-template-es2015-compiler/download/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha1-HuO8mhbsv1EYvjNLsV+cRvgvWCU=
 
-vue@^2.6.10:
+vue@^2.5.16, vue@^2.6.10:
   version "2.6.10"
   resolved "https://registry.npm.taobao.org/vue/download/vue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
   integrity sha1-pysaQqTYKnIepDjRtr9V5mGVxjc=
