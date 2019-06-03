@@ -118,10 +118,11 @@ export default class Register extends Vue {
     v =>
       dayjs(`${this.subject.date} ${v}`).isValid() ||
       'Date\'s format is invalid.',
-    v =>
-      dayjs(`${this.subject.date} ${v}`).isBefore(
+    v => {
+      return dayjs(`${this.subject.date} ${v}`).isBefore(
         dayjs(`${this.subject.date} ${this.subject.endTime}`)
-      ) || 'StartTime must be after EndTime.'
+      ) || 'StartTime must be before EndTime.'
+    }
   ]
 
   private endTimeRules: Array<(v: string) => boolean | string> = [
