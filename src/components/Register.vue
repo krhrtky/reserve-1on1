@@ -82,12 +82,12 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
-import dayjs from 'dayjs'
-import Preview from '@/components/Preview.vue'
-import { Subject } from '@/model/types'
+  import { Component, Vue } from 'vue-property-decorator'
+  import dayjs from 'dayjs'
+  import Preview from '@/components/Preview.vue'
+  import { Subject } from '@/model/types'
 
-const defaultSubject: Subject = {
+  const defaultSubject: Subject = {
   menteeName: '',
   date: dayjs().format('YYYY-MM-DD'),
   startTime: '18:00',
@@ -101,28 +101,23 @@ const defaultSubject: Subject = {
   }
 })
 export default class Register extends Vue {
+  subject: Subject = Object.assign({}, defaultSubject)
 
-  private subject: Subject = Object.assign({}, defaultSubject)
-
-  private nameRules: Array<(v: string) => boolean | string> = [
+  nameRules: Array<(v: string) => boolean | string> = [
     v => !!v || 'Name is required.'
   ]
 
-  private dateRules: Array<(v: string) => boolean | string> = [
+  dateRules: Array<(v: string) => boolean | string> = [
     v => !!v || 'Date is required.',
     v => dayjs(v).isValid() || 'Date\'s format is invalid'
   ]
 
-  private startTimeRules: Array<(v: string) => boolean | string> = [
+  startTimeRules: Array<(v: string) => boolean | string> = [
     v => !!v || 'StartTime is required.',
     v =>
       dayjs(`${this.subject.date} ${v}`).isValid() ||
       'Date\'s format is invalid.',
-    v => {
-      return dayjs(`${this.subject.date} ${v}`).isBefore(
-        dayjs(`${this.subject.date} ${this.subject.endTime}`)
-      ) || 'StartTime must be before EndTime.'
-    }
+    _ => this.timeValidate() || 'StartTime must be before EndTime.'
   ]
 
   private endTimeRules: Array<(v: string) => boolean | string> = [
@@ -130,17 +125,14 @@ export default class Register extends Vue {
     v =>
       dayjs(`${this.subject.date} ${v}`).isValid() ||
       'Date\'s format is invalid',
-    v =>
-      dayjs(`${this.subject.date} ${v}`).isAfter(
-        dayjs(`${this.subject.date} ${this.subject.startTime}`)
-      ) || 'EndTime must be after StartTime.'
+    _ => this.timeValidate() || 'EndTime must be after StartTime.'
   ]
 
-  private clear(): void {
+  clear(): void {
     this.subject = Object.assign({}, defaultSubject)
   }
 
-  private add(): void {
+  add(): void {
     const form: any = this.$refs.form as any
     if (form.validate()) {
       this.$store.commit('addSubject', this.subject)
@@ -149,11 +141,17 @@ export default class Register extends Vue {
     }
   }
 
-  private remove(subject: Subject): void {
+  remove(subject: Subject): void {
     this.$store.commit('removeSubject', subject)
   }
 
-  private get subjects(): Array<Subject> {
+  timeValidate(): boolean {
+    return dayjs(`${this.subject.date} ${this.subject.startTime}`).isBefore(
+      dayjs(`${this.subject.date} ${this.subject.endTime}`)
+    )
+  }
+
+  get subjects(): Array<Subject> {
     return this.$store.getters.subjects
   }
 }
