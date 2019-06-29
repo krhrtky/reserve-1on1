@@ -7,23 +7,29 @@
     </template>
     <v-card>
       <v-card-title>
-        <span class="headline">Transmission content check</span>
+        <v-text-field
+                v-model="subjectName"
+                label="Subject"
+                :rules="subjectNameRules"
+                required
+        />
       </v-card-title>
       <v-card-text id="main">
-        {{ contents.to }} <br>
-        <br>
-        お疲れ様です。 {{ contents.yourName }}です。 <br>
-        <br>
-        {{ contents.prefix }} <br>
+        {{ contents.to }} <br >
+        <br >
+        お疲れ様です。 {{ contents.yourName }}です。 <br >
+        <br >
+        <div v-for="(msg, i) of contents.prefix.split('\n')" :key="i">{{ msg }}</div>
         <div v-for="(subject, i) in subjects" :key="i">
-          ------------------------------------------------<br>
-          日時 : {{ formatDate(subject.date) }} {{ subject.startTime }} ~
-          {{ subject.endTime }} <br>
-          メンティ: {{ subject.menteeName }} <br>
-          会議室: {{ subject.useMeetingRoom ? '要' : '不要' }}<br>
-          ------------------------------------------------<br>
+          ------------------------------------------------<br >
+          日時&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ formatDate(subject.date) }} {{ subject.startTime }} ~
+          {{ subject.endTime }} <br >
+          メンター: {{ contents.yourName }}<br >
+          メンティ: {{ subject.menteeName }} <br >
+          会議室&nbsp;&nbsp;&nbsp;&nbsp;: {{ subject.useMeetingRoom ? '要' : '不要' }}<br >
+          ------------------------------------------------<br >
         </div>
-        {{ contents.postfix }} <br>
+        {{ contents.postfix }} <br >
       </v-card-text>
       <v-card-actions>
         <v-spacer />
@@ -39,11 +45,11 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
-import dayjs from 'dayjs'
-import { MailContent, Subject } from '@/model/types'
+  import { Component, Prop, Vue } from 'vue-property-decorator'
+  import dayjs from 'dayjs'
+  import { MailContent, Subject } from '@/model/types'
 
-@Component
+  @Component
 export default class Preview extends Vue {
   @Prop()
   subjects!: Array<Subject>
@@ -51,14 +57,21 @@ export default class Preview extends Vue {
   contents!: MailContent
 
   private open: boolean = false
+  private subjectName: string = `【共有&依頼】1on1面談_${dayjs().format(
+    'M月'
+  )}(${this.contents.yourName})`
 
-  private formatDate(dateStr: string): any {
+  subjectNameRules: Array<(v: string) => boolean | string> = [
+    v => !!v || 'subjectName is required.'
+  ]
+
+  private formatDate(dateStr: string): string {
     return dayjs(dateStr).format('M/DD(dd)')
   }
 
   private copy(): void {
     navigator.clipboard.writeText(
-      (this.$root.$el.querySelectorAll('#main')[0] as any).innerText
+      (this.$root.$el.querySelectorAll('#main')[0] as HTMLDivElement).innerText
     )
   }
 }
