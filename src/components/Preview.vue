@@ -36,8 +36,8 @@
         <v-btn color="green darken-1" flat="flat" @click="open = false">
           Close
         </v-btn>
-        <v-btn color="green darken-1" flat="flat" @click="copy">
-          Copy
+        <v-btn color="green darken-1" flat="flat" :disabled="!subjectName" @click="sendMail">
+          Send
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -73,6 +73,26 @@ export default class Preview extends Vue {
     navigator.clipboard.writeText(
       (this.$root.$el.querySelectorAll('#main')[0] as HTMLDivElement).innerText
     )
+  }
+
+  private sendMail(): void {
+
+    const content = {
+      subject: this.subjectName,
+      mailBody: (this.$root.$el.querySelectorAll('#main')[0] as HTMLDivElement)
+        .innerText
+    }
+
+    const result = fetch(process.env.VUE_APP_SEND_MAIL_END_POINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8'
+      },
+      body: JSON.stringify(content)
+    })
+      .then(res => res.json())
+      .then(json => json)
+      .catch(res => console.log(res))
   }
 }
 </script>
